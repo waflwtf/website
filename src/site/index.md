@@ -5,3 +5,5 @@ description: First page on this site.
 ---
 
 Hey there! Nice that your are here.
+
+[Foobar](example.org)

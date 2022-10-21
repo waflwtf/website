@@ -1,0 +1,53 @@
+:root {
+  --bg: hsl(49, 42%, 88%);
+  --accent: #620c00;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+*:focus-visible {
+  outline: 3px solid black;
+  outline-offset: 0.25rem;
+  border-radius: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background-color: var(--bg);
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 100%;
+  line-height: 1.75;
+}
+
+a {
+  color: var(--accent);
+}
+
+#layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 50rem;
+  width: calc(100% - 2rem);
+  margin: auto;
+}
+
+#header {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+#logo {
+  align-self: center;
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 1;
+}

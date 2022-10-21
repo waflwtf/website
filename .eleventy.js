@@ -7,6 +7,8 @@ module.exports = function (config) {
   // add navigation support
   config.addPlugin(eleventyNavigationPlugin);
 
+  config.addPassthroughCopy("./src/site/styles");
+
   return {
     dir: {
       input: "src/site",
