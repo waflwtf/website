@@ -17,14 +17,32 @@
     <body>
         <div id="layout">
             <header id="header">
-                <a href="/" id="logo">
-                    {{ metadata.title }}
-                </a>
+                <{{ "h1" if page.url == "/" else "span" }}  id="logo">
+                    <a href="/" >
+                        {{ metadata.title }}
+                    </a>
+                </{{ "h1" if page.url == "/" else "span" }}>
+                <span id="explanation">
+                </span>
             </header>
             <main>
-
                 {{ content | safe }}
             </main>
+            <footer>
+                <ul id="social-links">
+                    <li>
+                        <a rel="me noreferrer" href="{{ metadata.social.mastodon }}">
+                            <img src="/img/icons/mastodon.svg" alt="Mastodon">
+                        </a>
+                    </li>
+                    <li>
+                        <a  rel="me noreferrer" href="{{ metadata.social.twitter }}">
+                            <img src="/img/icons/twitter.svg" alt="Twitter">
+                        </a>
+                    </li>
+                </ul>
+            </footer>
         </div>
+        <script src="/scripts/main.js" defer></script>
     </body>
 </html>
