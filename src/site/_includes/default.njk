@@ -21,14 +21,30 @@
     <body>
         <div id="layout">
             <header id="header">
-                <{{ "h1" if page.url == "/" else "span" }}  id="logo">
+                <{{ "h1" if page.url == "/" else "div" }}  id="logo">
                     <a href="/" >
                         <!--  {{ metadata.title }}-->
                         <img src="/img/logo.svg" alt="WAFL">
 
                     </a>
-                </{{ "h1" if page.url == "/" else "span" }}>
+                </{{ "h1" if page.url == "/" else "div" }}>
                 <span id="explanation"></span>
+                <nav id="navigation">
+                    <ul>
+                        {% set navPages = collections.all | eleventyNavigation %}
+                        {%- for navItem in navPages -%}
+                            <li>
+                                <a
+                                    class="
+                                    {% if navItem.url == page.url %}
+                                        active
+                                    {% endif %}"
+                    href="{{ navItem.url }}"
+                    >{{ navItem.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
             </header>
             <main>
                 {{ content | safe }}
