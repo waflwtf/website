@@ -1,0 +1,19 @@
+---
+layout: default.njk
+---
+<h1>
+    {{ title }}
+</h1>
+
+<figure>
+    <figcaption>Episode {{ title }} anhören:</figcaption>
+    <audio
+        controls
+        src="{{ media.content }}">
+        <a href="{{ media.content }}">
+                Episode herunterladen
+            </a>
+    </audio>
+</figure>
+
+{{ content | safe }}

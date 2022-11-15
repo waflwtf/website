@@ -1,0 +1,16 @@
+{
+  "title": "WAFL",
+  "description": "Der kulinarisch anthropologische Philosophiepodcast von und mit Tobias Watzek und Lukas Flad.",
+  "category": "Society &amp; Culture",
+  "author": "Tobias Watzek & Lukas Flad",
+  "channelImage": "TODO",
+  "owner": {
+    "name": "TODO",
+    "email": "TODO"
+  },
+  "feedPath": "/podcasts/feed.xml",
+  "episode": {
+    "defaultDescription": "Die neueste Folge von WAFL dem kulinarisch anthropologische Philosophiepodcast von und mit Tobias Watzek und Lukas Flad."
+  },
+  "storageUrl": "https://storagewafl.blob.core.windows.net/episodes/"
+}

@@ -5,60 +5,71 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-            {% if title %}
-                {{ metadata.title }} &mdash; {{ title }}
-            {% else %}
-                {{ metadata.title }}
-            {% endif %}
+            
+                WAFL &mdash; foo
+            
         </title>
-        <meta name="description" content="{{ description if description else metadata.description }}">
+        <meta name="description" content="Der kulinarish anthropologische Philosophiepodcast von und mit Lukas Flad und Tobias Watzek.">
         <link rel="stylesheet" href="/styles/index.css">
         <link rel="manifest" href="/img/favicon/manifest.webmanifest">
         <link rel="icon" href="/img/favicon/favicon.ico" sizes="any">
         <link rel="icon" href="/img/favicon/icon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png">
-        {{ page.head }}
+        
     </head>
     <body>
         <div id="layout">
             <header id="header">
-                <{{ "h1" if page.url == "/" else "div" }}  id="logo">
+                <div  id="logo">
                     <a href="/" >
-                        <!--  {{ metadata.title }}-->
+                        <!--  WAFL-->
                         <img src="/img/logo.svg" alt="WAFL">
 
                     </a>
-                </{{ "h1" if page.url == "/" else "div" }}>
+                </div>
                 <span id="explanation"></span>
                 <nav id="navigation">
                     <ul>
-                        {% set navPages = collections.all | eleventyNavigation %}
-                        {%- for navItem in navPages -%}
-                            <li>
+                        <li>
                                 <a
                                     class="
-                                    {% if navItem.url == page.url %}
-                                        active
-                                    {% endif %}"
-                    href="{{ navItem.url }}"
-                    >{{ navItem.title }}</a>
+                                    "
+                    href="/impressum/"
+                    >Impressum</a>
                             </li>
-                        {% endfor %}
+                        
                     </ul>
                 </nav>
             </header>
             <main>
-                {{ content | safe }}
+                <h1>
+    foo
+</h1>
+
+<figure>
+    <figcaption>Episode foo anhören:</figcaption>
+    <audio
+        controls
+        src="/podcasts/dj-cruze-podcast-episode-57-june-2011.mp3">
+        <a href="/podcasts/dj-cruze-podcast-episode-57-june-2011.mp3">
+                Episode herunterladen
+            </a>
+    </audio>
+</figure>
+
+<p>Foo bar baz</p>
+
+
             </main>
             <footer>
                 <ul id="social-links">
                     <li>
-                        <a rel="me noreferrer" href="{{ metadata.social.mastodon }}">
+                        <a rel="me noreferrer" href="https://mastodon.online/@waflwtf">
                             <img src="/img/icons/mastodon.svg" alt="Mastodon">
                         </a>
                     </li>
                     <li>
-                        <a  rel="me noreferrer" href="{{ metadata.social.twitter }}">
+                        <a  rel="me noreferrer" href="https://twitter.com/waflwtf">
                             <img src="/img/icons/twitter.svg" alt="Twitter">
                         </a>
                     </li>
@@ -66,6 +77,6 @@
             </footer>
         </div>
         <script src="/scripts/main.js" defer></script>
-        {{ page.foot }}
+        
     </body>
 </html>
