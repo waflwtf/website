@@ -1,0 +1,63 @@
+---
+permalink: "/podcast/feed.xml"
+eleventyExcludeFromCollections: true
+sitemap:
+  exclude: yes
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <atom:link href="{{ permalink | absoluteUrl(metadata.url) }}" rel="self" type="application/rss+xml" />
+    <title>{{ podcast.title | xmlEscape }}</title>
+    <link>{{ metadata.url }}</link>
+    <description>{{ podcast.description | xmlEscape }}</description>
+    <language>de</language>
+    <lastBuildDate>{{ collections.podcast | getNewestCollectionItemDate | dateToRfc822 }}</lastBuildDate>
+    <generator>Eleventy</generator>
+    <itunes:author>{{ podcast.author }} </itunes:author>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:type>episodic</itunes:type>
+    <itunes:image href="{{ podcast.channelImage | absoluteUrl(metadata.url) }}" />
+    <itunes:owner>
+      <itunes:name>{{ podcast.owner.name }}</itunes:name>
+      <itunes:email>{{ podcast.owner.email }}</itunes:email>
+    </itunes:owner>
+    <itunes:category text="{{ podcast.category }}" />
+
+    {%- for podcastEpisode in collections.podcast | reverse -%}
+      <item>
+        <pubDate>{{ podcastEpisode.date | required | dateToRfc822 }}</pubDate>
+        <link>{{ podcastEpisode.url | absoluteUrl(metadata.url)  }}</link>
+        <guid isPermaLink="false">{{ podcastEpisode.data.media.guid | required | ensureUniqueInCollection("data.media.guid", collections.podcast) }}</guid>
+
+        <title>{{ podcastEpisode.data.title | required | ensureUniqueInCollection("data.title", collections.podcast) | xmlEscape }}</title>
+
+        <description><![CDATA[{{ podcastEpisode.data.media.description | required | safe }}]]></description>
+
+
+        <enclosure
+          url="{{ podcastEpisode.data.media.content | required | ensureUniqueInCollection("data.media.content", collections.podcast) | absoluteUrl(podcast.storageUrl) }}"
+          length="{{ podcastEpisode.data.media.fileSize | required }}"
+          type="audio/mpeg"
+        />
+
+        {# iTunes specific tags  #}
+
+        <itunes:episodeType>full</itunes:episodeType>
+
+        {% if podcastEpisode.data.media.image %}
+            <itunes:image href="{{ podcastEpisode.data.media.image | absoluteUrl(metadata.url) }}" />
+        {% else %}
+            <itunes:image href="{{ podcast.channelImage | required | absoluteUrl(metadata.url) }}" />
+        {% endif %}
+
+        <itunes:episode>{{ podcastEpisode.data.media.episode | ensureUniqueInCollection("data.media.episode", collections.podcast) | required }}</itunes:episode>
+
+        <itunes:duration>{{ podcastEpisode.data.media.duration | required }}</itunes:duration>
+      </item>
+    {%- endfor -%}
+  </channel>
+</rss>
