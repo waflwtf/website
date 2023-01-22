@@ -10,7 +10,6 @@ module.exports = function (config) {
   // add multiple nunjucks filters for RSS/Atom feeds
   config.addPlugin(eleventyPluginRss);
 
-  config.addPassthroughCopy("./src/site/styles");
   config.addPassthroughCopy("./src/site/scripts");
   config.addPassthroughCopy("./src/site/img");
 
