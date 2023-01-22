@@ -1,0 +1,25 @@
+---
+layout: default.njk
+---
+<article class="episode">
+    <h1>
+        {{ title }}
+    </h1>
+
+    <figure>
+        <figcaption>Episode {{ title }} anhören:</figcaption>
+        <audio
+        controls
+        src="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
+            <a href="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
+                Episode herunterladen
+        </a>
+        </audio>
+    </figure>
+    <a href="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
+        Episode herunterladen
+    </a>
+
+    {{ content | safe }}
+
+</article>

@@ -1,0 +1,5 @@
+{
+  "permalink": "podcast/{{ media.episode | required }}-{{ title | slugify }}/index.html",
+  "layout": "episode.njk",
+  "tags": ["podcast"]
+}
