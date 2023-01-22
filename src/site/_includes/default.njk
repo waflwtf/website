@@ -19,26 +19,35 @@
         <link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png">
         {{ page.head }}
     </head>
-    <body>
-        <div id="layout">
-            <header id="header">
-                <{{ "h1" if page.url == "/" else "div" }}  id="logo">
+    <body class="font-sans h-full">
+        <div class="container mx-auto px-4">
+            <header class="flex flex-col py-4 items-center">
+                <{{ "h1" if page.url == "/" else "div" }}>
                     <a href="/" >
-                        <!--  {{ metadata.title }}-->
-                        <img src="/img/logo.svg" alt="WAFL">
-
+                        <img class="w-28" src="/img/logo.svg" alt="WAFL">
                     </a>
                 </{{ "h1" if page.url == "/" else "div" }}>
-                <span id="explanation"></span>
-                <nav id="navigation">
-                    <ul>
+                <span id="explanation" class="italic text-lg invisible"></span>
+                <nav>
+                    <ul class="list-none p-0 m-0 mt-3 flex justify-center gap-8">
                         {% set navPages = collections.all | eleventyNavigation %}
                         {%- for navItem in navPages -%}
                             <li>
                                 <a
                                     class="
+                                    bg-yellow-300
+                                    border-solid
+                                    border-yellow-300
+                                    border-4
+                                    text-black
+                                    p-1
+                                    font-bold
+                                    hover:bg-white
                                     {% if navItem.url == page.url %}
-                                        active
+                                        underline
+                                        decoration-2
+                                    {% else %}
+                                        no-underline
                                     {% endif %}"
                     href="{{ navItem.url }}"
                     >{{ navItem.title }}</a>
@@ -50,16 +59,16 @@
             <main>
                 {{ content | safe }}
             </main>
-            <footer>
-                <ul id="social-links">
+            <footer class="my-7">
+                <ul class="list-none p-0 flex justify-center gap-8">
                     <li>
-                        <a rel="me noreferrer" href="{{ metadata.social.mastodon }}">
-                            <img src="/img/icons/mastodon.svg" alt="Mastodon">
+                        <a class="block" rel="me noreferrer" href="{{ metadata.social.mastodon }}">
+                            <img class="text-sky-400 w-12" src="/img/icons/mastodon.svg" alt="Mastodon">
                         </a>
                     </li>
                     <li>
-                        <a  rel="me noreferrer" href="{{ metadata.social.twitter }}">
-                            <img src="/img/icons/twitter.svg" alt="Twitter">
+                        <a class="block" rel="me noreferrer" href="{{ metadata.social.twitter }}">
+                            <img class="text-sky-400 w-12" src="/img/icons/twitter.svg" alt="Twitter">
                         </a>
                     </li>
                 </ul>

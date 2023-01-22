@@ -1,8 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.njk", "./src/**/*.md"],
+  content: ["./src/**/*.njk", "./src/**/*.md", , "./src/**/*.js"],
   theme: {
+    fontFamily: {
+      sans: ["Work Sans", "sans-serif"],
+    },
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };

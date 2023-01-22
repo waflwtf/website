@@ -2,6 +2,7 @@ const UserConfig = require("@11ty/eleventy/src/UserConfig");
 const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
 const eleventyPluginRss = require("@11ty/eleventy-plugin-rss");
 const escape = require("lodash/escape");
+const contentBox = require("./src/shortcodes/contentBox.js");
 
 /** @param {UserConfig} config */
 module.exports = function (config) {
@@ -13,10 +14,7 @@ module.exports = function (config) {
   config.addPassthroughCopy("./src/site/scripts");
   config.addPassthroughCopy("./src/site/img");
 
-  config.addPairedShortcode(
-    "contentBox",
-    (content) => `<div class="content-box">${content}</div>`
-  );
+  config.addPairedShortcode("contentBox", contentBox);
 
   // Escape characters for XML feed
   config.addFilter("xmlEscape", (value) => {

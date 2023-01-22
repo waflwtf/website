@@ -1,0 +1,13 @@
+---
+layout: page.njk
+title: "Podcast"
+eleventyNavigation:
+    key: Podcast
+    order: 1
+---
+
+{%- for podcastEpisode in collections.podcast | reverse -%}
+<a href="{{ podcastEpisode.url }}">
+    {{ podcastEpisode.data.title }}
+</a>
+{%- endfor -%}

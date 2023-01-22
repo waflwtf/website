@@ -2,12 +2,12 @@
 layout: default.njk
 ---
 <article class="episode">
-    <h1>
+    <h1 class="text-4xl">
         {{ title }}
     </h1>
 
     <figure>
-        <figcaption>Episode {{ title }} anhören:</figcaption>
+        <figcaption>Episode &bdquo;{{ title }}&ldquo; anhören:</figcaption>
         <audio
         controls
         src="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
@@ -16,10 +16,10 @@ layout: default.njk
         </a>
         </audio>
     </figure>
-    <a href="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
+    <a class="text-lg" href="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
         Episode herunterladen
     </a>
-
-    {{ content | safe }}
-
+    <div class="prose">
+        {{ content | safe }}
+    </div>
 </article>

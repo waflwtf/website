@@ -4,7 +4,7 @@ date: Last Modified
 title: "Impressum"
 eleventyNavigation:
     key: Impressum
-    order: 1
+    order: 2
 ---
 
 Here comes the legal stuff
