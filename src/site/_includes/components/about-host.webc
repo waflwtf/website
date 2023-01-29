@@ -1,0 +1,26 @@
+<template webc:type="11ty" 11ty:type="njk">
+  <div class="flex
+              flex-col-reverse
+              {% if reverse %}
+                lg:flex-row-reverse
+              {% else %}
+                lg:flex-row
+              {% endif %}
+              gap-4
+              p-4
+              mb-2
+              bg-white
+              border-4
+              rounded
+              border-yellow-300">
+      <div class="prose flex-auto">
+          <h2>{{ heading }}</h2>
+          {% renderTemplate "md" %}
+            <slot></slot>
+          {% endrenderTemplate %}
+      </div>
+      <div class="flex justify-center flex-grow items-center">
+          <img class="border-4 rounded-full border-sky-400 w-40 lg:w-80" src="{{ imageSrc }}" alt="{{ imageAlt }}" />
+      </div>
+    </div>
+</template>

@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,800;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+Palette:
+#FDC921
+#FDD85D
+#FFFDF7
+#99D6EA
+#6798C0
+*/
+
+:root {
+  --bg: #fffdf7;
+  --accent: #6798c0;
+  --text-accent: #c13a3b;
+  --border-color: #fdc921;
+  --content-bg: #fff;
+}
+
+html, body {
+  height: 100%;
+}
+
+a {
+  @apply text-black;
+}
