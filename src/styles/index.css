@@ -20,3 +20,11 @@ Palette:
   --border-color: #fdc921;
   --content-bg: #fff;
 }
+
+html, body {
+  height: 100%;
+}
+
+a {
+  @apply text-black;
+}

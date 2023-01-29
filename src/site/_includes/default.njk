@@ -19,9 +19,9 @@
         <link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png">
         {{ page.head }}
     </head>
-    <body class="font-sans h-full">
-        <div class="container mx-auto px-4">
-            <header class="flex flex-col py-4 items-center">
+    <body class="font-sans bg-amber-100">
+        <div class="container mx-auto px-4 min-h-full flex flex-col">
+            <header class="flex-none flex flex-col py-4 items-center">
                 <{{ "h1" if page.url == "/" else "div" }}>
                     <a href="/" >
                         <img class="w-28" src="/img/logo.svg" alt="WAFL">
@@ -42,6 +42,7 @@
                                     text-black
                                     p-1
                                     font-bold
+                                    focus:bg-white
                                     hover:bg-white
                                     {% if navItem.url == page.url %}
                                         underline
@@ -56,10 +57,10 @@
                     </ul>
                 </nav>
             </header>
-            <main>
+            <main class="flex-grow">
                 {{ content | safe }}
             </main>
-            <footer class="my-7">
+            <footer class="flex-none my-7">
                 <ul class="list-none p-0 flex justify-center gap-8">
                     <li>
                         <a class="block" rel="me noreferrer" href="{{ metadata.social.mastodon }}">

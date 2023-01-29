@@ -5,9 +5,12 @@ eleventyNavigation:
     key: Podcast
     order: 1
 ---
-
+<ul>
 {%- for podcastEpisode in collections.podcast | reverse -%}
-<a href="{{ podcastEpisode.url }}">
-    {{ podcastEpisode.data.title }}
-</a>
+<li>
+    <a href="{{ podcastEpisode.url }}">
+        {{ podcastEpisode.data.title }}
+    </a>
+</li>
 {%- endfor -%}
+</ul>

@@ -3,6 +3,8 @@ const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
 const eleventyPluginRss = require("@11ty/eleventy-plugin-rss");
 const escape = require("lodash/escape");
 const contentBox = require("./src/shortcodes/contentBox.js");
+const pluginWebc = require("@11ty/eleventy-plugin-webc");
+const { EleventyRenderPlugin } = require("@11ty/eleventy");
 
 /** @param {UserConfig} config */
 module.exports = function (config) {
@@ -10,6 +12,10 @@ module.exports = function (config) {
   config.addPlugin(eleventyNavigationPlugin);
   // add multiple nunjucks filters for RSS/Atom feeds
   config.addPlugin(eleventyPluginRss);
+  config.addPlugin(pluginWebc, {
+    components: "./src/site/_includes/components/**/*.webc",
+  });
+  config.addPlugin(EleventyRenderPlugin);
 
   config.addPassthroughCopy("./src/site/scripts");
   config.addPassthroughCopy("./src/site/img");
@@ -73,7 +79,7 @@ module.exports = function (config) {
       output: "_site",
       data: `_data`,
     },
-    templateFormats: ["njk", "md", "11ty.js"],
+    templateFormats: ["njk", "md", "11ty.js", "webc"],
     markdownTemplateEngine: "njk",
     passthroughFileCopy: true,
   };
