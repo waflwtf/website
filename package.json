@@ -5,7 +5,8 @@
     "start": "cross-env NODE_ENV=development npm-run-all clean build:styles --parallel start:styles start:eleventy --print-label",
     "start:eleventy": "eleventy --serve",
     "start:styles": "postcss --watch ./src/styles/index.css -o ./_site/styles/index.css",
-    "build": "cross-env NODE_ENV=production run-s clean build:styles eleventy",
+    "build": "cross-env NODE_ENV=production run-s clean build:styles build:eleventy",
+    "build:eleventy": "eleventy",
     "build:styles": "postcss ./src/styles/index.css -o ./_site/styles/index.css"
   },
   "devDependencies": {
