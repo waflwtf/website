@@ -6,6 +6,7 @@ const contentBox = require("./src/shortcodes/contentBox.js");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
 const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
+const path = require("path");
 
 /** @param {UserConfig} config */
 module.exports = function (config) {

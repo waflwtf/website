@@ -51,6 +51,9 @@
     duration: 0,
     volume: 100,
     muted: false,
+    get currentPosition() {
+      return this.seekingPosition == undefined ? this.position : this.seekingPosition;
+    },
     togglePlayPause() {
       if (this.playing) {
         this.$refs.audio.pause();
@@ -92,9 +95,10 @@
           class="col-start-1 col-span-full"
           type="range"
           aria-label="Wiedergabeposition"
-          x-bind:aria-valuetext="formatSecondsForValuetext(seekingPosition == undefined ? position : seekingPosition)"
+          x-bind:style="{ '--min': 0, '--max': duration, '--val': currentPosition }"
+          x-bind:aria-valuetext="formatSecondsForValuetext(currentPosition)"
           x-bind:max="Math.floor(duration)"
-          x-bind:value="seekingPosition == undefined ? position : seekingPosition"
+          x-bind:value="currentPosition"
           x-on:input="seekingPosition = $el.value"
           x-on:change="
         position = $el.value;
@@ -104,8 +108,8 @@
         <div class="flex flex-row justify-between">
           <div class="tabular-nums text-left">
             <time
-              x-bind:datetime="formatSecondsForTime(seekingPosition == undefined ? position : seekingPosition)"
-              x-text="formatSeconds(seekingPosition == undefined ? position : seekingPosition)"
+              x-bind:datetime="formatSecondsForTime(currentPosition)"
+              x-text="formatSeconds(currentPosition)"
             ></time>
           </div>
           <div class="tabular-nums text-right">
@@ -128,6 +132,7 @@
             type="range"
             max="100"
             aria-label="Lautstärke"
+            x-bind:style="{ '--min': 0, '--max': 100, '--val': volume }"
             x-bind:value="volume"
             x-on:input="
             volume = $el.value;
@@ -177,22 +182,33 @@
 
 <style webc:scoped>
   :host input[type="range"] {
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--val) - var(--min)) / var(--range));
+    --sx: calc(0.5 * 1.5em + var(--ratio) * (100% - 1.5em));
+    --progress-color: theme(colors.sky[500]);
+    --range-color: theme(colors.neutral[300]);
     @apply appearance-none
-      h-2
+      h-4
       w-full
       bg-white;
   }
 
-  /*  :host input[type="range"]::-webkit-slider-thumb {
+  :host input[type="range"]::-webkit-slider-thumb {
     @apply appearance-none
       bg-sky-400
       border-transparent
       h-4
       w-4
       rounded-full
-      shadow-sm
-      cursor-pointer;
-  }  */
+      shadow-md
+      cursor-grab;
+    margin-top: -0.25rem;
+  }
+
+  :host input[type="range"]::-webkit-slider-thumb:active {
+    @apply cursor-grabbing;
+  }
+
   :host input[type="range"]::-moz-range-thumb {
     @apply appearance-none
       bg-sky-400
@@ -208,129 +224,30 @@
     @apply cursor-grabbing;
   }
 
-  /*  :host input[type="range"]::-ms-thumb {
-    @apply appearance-none
-      bg-sky-400
-      border-transparent
-      h-4
-      w-4
-      rounded-full
-      shadow-sm
-      cursor-pointer;
-  }  */
-
   :host input[type="range"]::-moz-range-track {
+    @apply appearance-none
+    h-2
+    rounded
+    cursor-pointer;
+    background: var(--range-color);
+  }
+
+  :host input[type="range"]::-moz-range-progress {
+    @apply appearance-none
+      h-2
+      rounded-l
+      cursor-pointer;
+    background: var(--progress-color);
+  }
+
+  :host input[type="range"]::-webkit-slider-runnable-track {
     @apply appearance-none
     h-2
     rounded
     cursor-pointer
       bg-black;
-  }
 
-  :host input[type="range"]::-moz-range-progress {
-    @apply appearance-none
-      bg-sky-500
-      h-2
-      rounded-l
-      cursor-pointer;
+    background: linear-gradient(var(--progress-color), var(--progress-color)) 0 /
+      var(--sx) 100% no-repeat var(--range-color);
   }
-
-  :host input[type="range"]::-webkit-slider-runnable-track {
-    background: linear-gradient(#007cf8, #007cf8) 0 / var(--sx) 100% no-repeat,
-      #efefef;
-  }
-
-  /*  :host input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 3px;
-    cursor: pointer;
-    @apply bg-red-400;
-
-  }
-  :host input[type="range"]::before {
-    position: absolute;
-    content: "";
-    top: 8px;
-    left: 0;
-    width: var(--seek-before-width);
-    height: 3px;
-    background-color: #007db5;
-    cursor: pointer;
-  }
-  :host input[type="range"]::-webkit-slider-thumb {
-    position: relative;
-    -webkit-appearance: none;
-    box-sizing: content-box;
-    border: 1px solid #007db5;
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    background-color: #fff;
-    cursor: pointer;
-    margin: -7px 0 0 0;
-  }
-  :host input[type="range"]:active::-webkit-slider-thumb {
-    transform: scale(1.2);
-    background: #007db5;
-  }
-  :host input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 3px;
-    cursor: pointer;
-    background: linear-gradient(
-      to right,
-      rgba(0, 125, 181, 0.6) var(--buffered-width),
-      rgba(0, 125, 181, 0.2) var(--buffered-width)
-    );
-  }
-  :host input[type="range"]::-moz-range-progress {
-    background-color: #007db5;
-  }
-  :host input[type="range"]::-moz-focus-outer {
-    border: 0;
-  }
-  :host input[type="range"]::-moz-range-thumb {
-    box-sizing: content-box;
-    border: 1px solid #007db5;
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    background-color: #fff;
-    cursor: pointer;
-  }
-  :host input[type="range"]:active::-moz-range-thumb {
-    transform: scale(1.2);
-    background: #007db5;
-  }
-  :host input[type="range"]::-ms-track {
-    width: 100%;
-    height: 3px;
-    cursor: pointer;
-    background: transparent;
-    border: solid transparent;
-    color: transparent;
-  }
-  :host input[type="range"]::-ms-fill-lower {
-    background-color: #007db5;
-  }
-  :host input[type="range"]::-ms-fill-upper {
-    background: linear-gradient(
-      to right,
-      rgba(0, 125, 181, 0.6) var(--buffered-width),
-      rgba(0, 125, 181, 0.2) var(--buffered-width)
-    );
-  }
-  :host input[type="range"]::-ms-thumb {
-    box-sizing: content-box;
-    border: 1px solid #007db5;
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    background-color: #fff;
-    cursor: pointer;
-  }
-  :host input[type="range"]:active::-ms-thumb {
-    transform: scale(1.2);
-    background: #007db5;
-  }  */
 </style>
