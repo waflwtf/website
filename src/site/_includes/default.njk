@@ -12,12 +12,15 @@
             {% endif %}
         </title>
         <meta name="description" content="{{ description if description else metadata.description }}">
-        <link rel="stylesheet" href="/styles/{{ stylesManifest["index.css"] }}">
+        <link rel="stylesheet" href="/styles/index.css">
         <link rel="manifest" href="/img/favicon/manifest.webmanifest">
         <link rel="icon" href="/img/favicon/favicon.ico" sizes="any">
         <link rel="icon" href="/img/favicon/icon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png">
         {{ page.head }}
+        <style>
+            {{page.url | webcGetCss | safe}}
+        </style>
     </head>
     <body class="font-sans bg-amber-100">
         <div class="container mx-auto px-4 min-h-full flex flex-col">
@@ -27,7 +30,7 @@
                         <img class="w-28" src="/img/logo.svg" alt="WAFL">
                     </a>
                 </{{ "h1" if page.url == "/" else "div" }}>
-                <span id="explanation" class="italic text-lg invisible"></span>
+                <wafl-explanation></wafl-explanation>
                 <nav>
                     <ul class="list-none p-0 m-0 mt-3 flex justify-center gap-8">
                         {% set navPages = collections.all | eleventyNavigation %}
@@ -75,7 +78,10 @@
                 </ul>
             </footer>
         </div>
-        <script src="/scripts/main.js" defer></script>
+        <script src="/scripts/main.js" type="module"></script>
+        <script>
+            {{ page.url | webcGetJs | safe }}
+        </script>
         {{ page.foot }}
     </body>
 </html>

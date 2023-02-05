@@ -1,0 +1,336 @@
+<script>
+  function secondsToHMS(s) {
+    const hours = Math.floor(s / 3600);
+    const minutes = Math.floor((s % 3600) / 60);
+    const seconds = Math.floor(s % 60);
+
+    return { hours, minutes, seconds };
+  }
+
+  function formatSeconds(s) {
+    function twoDigitsNumberString(n) {
+      return n >= 10 ? n.toString() : `0${n}`;
+    }
+
+    const { hours, minutes, seconds } = secondsToHMS(s);
+
+    return `${twoDigitsNumberString(hours)}:${twoDigitsNumberString(
+      minutes
+    )}:${twoDigitsNumberString(seconds)}`;
+  }
+
+  function formatSecondsForValuetext(s) {
+    const { hours, minutes, seconds } = secondsToHMS(s);
+    const hoursText =
+      hours === 0 ? "" : `${hours} ${hours === 1 ? "Stunde" : "Stunden"}`;
+    const minutesText =
+      minutes === 0 ? "" : `${minutes} ${minutes === 1 ? "Minute" : "Minuten"}`;
+    const secondsText =
+      seconds === 0
+        ? "0 Sekunden"
+        : `${seconds} ${seconds === 1 ? "Sekunde" : "Sekunden"}`;
+
+    return `${hoursText} ${minutesText} ${secondsText}`.trim();
+  }
+
+  function formatSecondsForTime(s) {
+    const { hours, minutes, seconds } = secondsToHMS(s);
+    return `PT${hours}H${minutes}M${seconds}S`;
+  }
+</script>
+
+<div
+  class="flex flex-col gap-2 bg-white p-2"
+  role="region"
+  aria-label="Podcast Player"
+  x-cloak
+  x-data="{
+    playing: false,
+    seekingPosition: undefined,
+    position: 0,
+    duration: 0,
+    volume: 100,
+    muted: false,
+    togglePlayPause() {
+      if (this.playing) {
+        this.$refs.audio.pause();
+      } else {
+        this.$refs.audio.play();
+      }
+    }
+  }"
+>
+  <div class="flex flex-col md:flex-row gap-2">
+    <audio
+      preload="metadata"
+      :src="src"
+      x-ref="audio"
+      x-init="$el.readyState > 0 ? duration = $el.duration : undefined"
+      x-on:loadedmetadata="duration = $el.duration"
+      x-on:pause="playing = false"
+      x-on:play="playing = true"
+      x-on:timeupdate="position = $el.currentTime"
+    ></audio>
+    <img class="w-52 h52 self-center" :src="cover" alt="" />
+    <div class="flex flex-col md:block md:flex-grow md:self-center">
+      <button
+        class="w-12 h-12 self-center flex-none md:mx-auto"
+        x-on:click="togglePlayPause"
+        x-bind:title="playing ? 'Pause' : 'Play'"
+      >
+        <icon-play
+          x-show="!playing"
+          class="hover:drop-shadow-lg w-full h-full"
+        ></icon-play>
+        <icon-pause
+          x-show="playing"
+          class="hover:drop-shadow-lg w-full h-full"
+        ></icon-pause>
+      </button>
+      <div class="w-100">
+        <input
+          class="col-start-1 col-span-full"
+          type="range"
+          aria-label="Wiedergabeposition"
+          x-bind:aria-valuetext="formatSecondsForValuetext(seekingPosition == undefined ? position : seekingPosition)"
+          x-bind:max="Math.floor(duration)"
+          x-bind:value="seekingPosition == undefined ? position : seekingPosition"
+          x-on:input="seekingPosition = $el.value"
+          x-on:change="
+        position = $el.value;
+        $refs.audio.currentTime = $el.value;
+        $nextTick(() => { seekingPosition = undefined; })"
+        />
+        <div class="flex flex-row justify-between">
+          <div class="tabular-nums text-left">
+            <time
+              x-bind:datetime="formatSecondsForTime(seekingPosition == undefined ? position : seekingPosition)"
+              x-text="formatSeconds(seekingPosition == undefined ? position : seekingPosition)"
+            ></time>
+          </div>
+          <div class="tabular-nums text-right">
+            <time
+              x-bind:datetime="formatSecondsForTime(duration)"
+              x-text="formatSeconds(duration)"
+            ></time>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 items-center md:justify-end">
+        <output
+          :for="'volume-' + uid"
+          class="flex-none text-right tabular-nums w-10"
+          x-text="volume + '%'"
+        ></output>
+        <div class="flex-grow md:flex-grow-0 md:w-1/3 flex items-center">
+          <input
+            :id="'volume-' + uid"
+            type="range"
+            max="100"
+            aria-label="Lautstärke"
+            x-bind:value="volume"
+            x-on:input="
+            volume = $el.value;
+            $refs.audio.volume = $el.value / 100;"
+          />
+        </div>
+        <button
+          class="w-8 h-8"
+          x-bind:title="muted ? 'Stummschaltung aufheben' : 'stumm schalten'"
+          x-on:click="
+          muted = !muted;
+          $refs.audio.muted = muted;"
+        >
+          <icon-unmute
+            x-show="!muted"
+            class="w-full h-full hover:drop-shadow-lg"
+          ></icon-unmute>
+          <icon-mute
+            x-show="muted"
+            class="w-full h-full hover:drop-shadow-lg"
+          ></icon-mute>
+        </button>
+      </div>
+      <div class="text-center mt-4 max-w-sm mx-auto">
+        <a
+          class="flex flex-col items-center justify-center md:flex-row bg-yellow-300 border-solid border-yellow-300 border-4 text-black p-3 font-bold focus:bg-white hover:bg-white"
+          :href="src"
+          :download="title"
+        >
+          <icon-download class="inline-block w-10"></icon-download>
+          Episode &bdquo;<template webc:nokeep @text="title"></template>&ldquo;
+          herunterladen</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div webc:is="noscript">
+  <audio controls :src="src">
+    <a :href="src"
+      >Episode &bdquo;<template webc:nokeep @text="title"></template>&ldquo;
+      herunterladen</a
+    >
+  </audio>
+</div>
+
+<style webc:scoped>
+  :host input[type="range"] {
+    @apply appearance-none
+      h-2
+      w-full
+      bg-white;
+  }
+
+  /*  :host input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none
+      bg-sky-400
+      border-transparent
+      h-4
+      w-4
+      rounded-full
+      shadow-sm
+      cursor-pointer;
+  }  */
+  :host input[type="range"]::-moz-range-thumb {
+    @apply appearance-none
+      bg-sky-400
+      border-transparent
+      h-4
+      w-4
+      rounded-full
+      shadow-md
+      cursor-grab;
+  }
+
+  :host input[type="range"]::-moz-range-thumb:active {
+    @apply cursor-grabbing;
+  }
+
+  /*  :host input[type="range"]::-ms-thumb {
+    @apply appearance-none
+      bg-sky-400
+      border-transparent
+      h-4
+      w-4
+      rounded-full
+      shadow-sm
+      cursor-pointer;
+  }  */
+
+  :host input[type="range"]::-moz-range-track {
+    @apply appearance-none
+    h-2
+    rounded
+    cursor-pointer
+      bg-black;
+  }
+
+  :host input[type="range"]::-moz-range-progress {
+    @apply appearance-none
+      bg-sky-500
+      h-2
+      rounded-l
+      cursor-pointer;
+  }
+
+  :host input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(#007cf8, #007cf8) 0 / var(--sx) 100% no-repeat,
+      #efefef;
+  }
+
+  /*  :host input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 3px;
+    cursor: pointer;
+    @apply bg-red-400;
+
+  }
+  :host input[type="range"]::before {
+    position: absolute;
+    content: "";
+    top: 8px;
+    left: 0;
+    width: var(--seek-before-width);
+    height: 3px;
+    background-color: #007db5;
+    cursor: pointer;
+  }
+  :host input[type="range"]::-webkit-slider-thumb {
+    position: relative;
+    -webkit-appearance: none;
+    box-sizing: content-box;
+    border: 1px solid #007db5;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    margin: -7px 0 0 0;
+  }
+  :host input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+    background: #007db5;
+  }
+  :host input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 3px;
+    cursor: pointer;
+    background: linear-gradient(
+      to right,
+      rgba(0, 125, 181, 0.6) var(--buffered-width),
+      rgba(0, 125, 181, 0.2) var(--buffered-width)
+    );
+  }
+  :host input[type="range"]::-moz-range-progress {
+    background-color: #007db5;
+  }
+  :host input[type="range"]::-moz-focus-outer {
+    border: 0;
+  }
+  :host input[type="range"]::-moz-range-thumb {
+    box-sizing: content-box;
+    border: 1px solid #007db5;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  :host input[type="range"]:active::-moz-range-thumb {
+    transform: scale(1.2);
+    background: #007db5;
+  }
+  :host input[type="range"]::-ms-track {
+    width: 100%;
+    height: 3px;
+    cursor: pointer;
+    background: transparent;
+    border: solid transparent;
+    color: transparent;
+  }
+  :host input[type="range"]::-ms-fill-lower {
+    background-color: #007db5;
+  }
+  :host input[type="range"]::-ms-fill-upper {
+    background: linear-gradient(
+      to right,
+      rgba(0, 125, 181, 0.6) var(--buffered-width),
+      rgba(0, 125, 181, 0.2) var(--buffered-width)
+    );
+  }
+  :host input[type="range"]::-ms-thumb {
+    box-sizing: content-box;
+    border: 1px solid #007db5;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  :host input[type="range"]:active::-ms-thumb {
+    transform: scale(1.2);
+    background: #007db5;
+  }  */
+</style>

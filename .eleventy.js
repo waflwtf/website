@@ -5,6 +5,7 @@ const escape = require("lodash/escape");
 const contentBox = require("./src/shortcodes/contentBox.js");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
+const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
 
 /** @param {UserConfig} config */
 module.exports = function (config) {
@@ -16,9 +17,48 @@ module.exports = function (config) {
     components: "./src/site/_includes/components/**/*.webc",
   });
   config.addPlugin(EleventyRenderPlugin);
+  config.addPlugin(EleventyVitePlugin, {
+    tempFolderName: ".11ty-vite", // Default name of the temp folder
 
+    // Vite options (equal to vite.config.js inside project root)
+    /** @type {import('vite').UserConfig} */
+    viteOptions: {
+      publicDir: "public",
+      clearScreen: false,
+      appType: "mpa",
+      server: {
+        mode: "development",
+        middlewareMode: true,
+      },
+      assetsInclude: ["**/*.xml", "**/*.txt"],
+      build: {
+        mode: "production",
+        assetsInlineLimit: 0,
+        rollupOptions: {
+          output: {
+            assetFileNames(chunkInfo) {
+              let ext = path.extname(chunkInfo.name);
+
+              if (/png|svg|jpg|jpeg|webp|ico/i.test(ext)) {
+                return `img/[name][extname]`;
+              } else if (/mp4|webm/i.test(ext)) {
+                ext = "videos";
+              }
+
+              return `assets/${ext}/[name].[hash][extname]`;
+            },
+
+            chunkFileNames: "assets/scripts/[name].[hash].js",
+            entryFileNames: "assets/scripts/[name].[hash].js",
+          },
+        },
+      },
+    },
+  });
+
+  config.addPassthroughCopy("./public");
   config.addPassthroughCopy("./src/site/scripts");
-  config.addPassthroughCopy("./src/site/img");
+  config.addPassthroughCopy("./src/site/styles");
 
   config.addPairedShortcode("contentBox", contentBox);
 

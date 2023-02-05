@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,800;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,800;1,400&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -21,10 +21,15 @@ Palette:
   --content-bg: #fff;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 a {
   @apply text-black;
+}
+
+[x-cloak] {
+  display: none !important;
 }
