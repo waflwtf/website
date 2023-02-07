@@ -7,6 +7,8 @@ const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
 const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
 const path = require("path");
+const vue = require("@vitejs/plugin-vue").default;
+const svgLoader = require("vite-svg-loader").default;
 
 /** @param {UserConfig} config */
 module.exports = function (config) {
@@ -31,6 +33,7 @@ module.exports = function (config) {
         mode: "development",
         middlewareMode: true,
       },
+      plugins: [vue(), svgLoader()],
       assetsInclude: ["**/*.xml", "**/*.txt"],
       build: {
         mode: "production",
@@ -58,6 +61,7 @@ module.exports = function (config) {
   });
 
   config.addPassthroughCopy("./public");
+  config.addPassthroughCopy("./src/site/assets");
   config.addPassthroughCopy("./src/site/scripts");
   config.addPassthroughCopy("./src/site/styles");
 
