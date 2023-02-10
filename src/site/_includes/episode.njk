@@ -9,9 +9,15 @@ layout: default.njk
     {%- set audioSrc = media.content | absoluteUrl(podcast.storageUrl) -%}
     {%- set cover = media.image if media.image else podcast.channelImage -%}
 
-    {% renderTemplate "webc", {title: title, audioSrc: audioSrc, cover: cover} %}
-    <podcast-player :title="title" :src="audioSrc" :cover="cover"></podcast-player>
-    {% endrenderTemplate %}
+    <div class="max-w-prose mb-4">
+        {% renderTemplate "webc", {
+            title: title,
+            audioSrc: audioSrc,
+            cover: cover
+        } %}
+        <podcast-player :title="title" :src="audioSrc" :cover="cover"></podcast-player>
+        {% endrenderTemplate %}
+    </div>
     <div class="prose">
         {{ content | safe }}
     </div>

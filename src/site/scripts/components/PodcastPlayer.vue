@@ -1,13 +1,10 @@
 <script setup>
-import uniqueId from "lodash/uniqueId";
-import { ref, reactive, watch, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import PlayIcon from "/assets/icons/icon-play.svg?url";
 import PauseIcon from "/assets/icons/icon-pause.svg?url";
-import MuteIcon from "/assets/icons/icon-mute.svg?url";
-import UnmuteIcon from "/assets/icons/icon-unmute.svg?url";
 import DownloadIcon from "/assets/icons/icon-download.svg?url";
-
-const uid = uniqueId();
+import BackIcon from "/assets/icons/icon-back.svg?url";
+import ForwardIcon from "/assets/icons/icon-forward.svg?url";
 
 const props = defineProps(["src", "cover", "title"]);
 
@@ -16,8 +13,6 @@ const state = reactive({
   seekingPosition: undefined,
   position: 0,
   duration: 0,
-  volume: 100,
-  muted: false,
 });
 
 const audioElement = ref(null);
@@ -28,6 +23,8 @@ const currentPosition = computed(() =>
   )
 );
 
+const flooredDuration = computed(() => Math.floor(state.duration));
+
 function secondsToHMS(s) {
   const hours = Math.floor(s / 3600);
   const minutes = Math.floor((s % 3600) / 60);
@@ -36,33 +33,29 @@ function secondsToHMS(s) {
   return { hours, minutes, seconds };
 }
 
-function formatSeconds(s) {
-  function twoDigitsNumberString(n) {
-    return n >= 10 ? n.toString() : `0${n}`;
-  }
-
+function formatSecondsToDisplay(s) {
   const { hours, minutes, seconds } = secondsToHMS(s);
 
-  return `${twoDigitsNumberString(hours)}:${twoDigitsNumberString(
-    minutes
-  )}:${twoDigitsNumberString(seconds)}`;
+  return [hours, minutes, seconds]
+    .map((n) => String(n).padStart(2, "0"))
+    .join(":");
 }
 
-function formatSecondsForValuetext(s) {
+function pluralize(s, n) {
+  return `${n} ${s}${n === 0 || n > 1 ? "n" : ""}`;
+}
+
+function formatSecondToValuetext(s) {
   const { hours, minutes, seconds } = secondsToHMS(s);
-  const hoursText =
-    hours === 0 ? "" : `${hours} ${hours === 1 ? "Stunde" : "Stunden"}`;
-  const minutesText =
-    minutes === 0 ? "" : `${minutes} ${minutes === 1 ? "Minute" : "Minuten"}`;
-  const secondsText =
-    seconds === 0
-      ? "0 Sekunden"
-      : `${seconds} ${seconds === 1 ? "Sekunde" : "Sekunden"}`;
+
+  const hoursText = hours === 0 ? "" : pluralize("Stunde", hours);
+  const minutesText = minutes === 0 ? "" : pluralize("Minute", minutes);
+  const secondsText = pluralize("Sekunde", seconds);
 
   return `${hoursText} ${minutesText} ${secondsText}`.trim();
 }
 
-function formatSecondsForTime(s) {
+function formatSecondsToDuration(s) {
   const { hours, minutes, seconds } = secondsToHMS(s);
   return `PT${hours}H${minutes}M${seconds}S`;
 }
@@ -75,24 +68,18 @@ function togglePlayPause() {
   }
 }
 
-function setPosition(event) {
-  state.position = event.target.value;
+function goBack() {
+  setPosition(Math.max(0, state.position - 10));
+}
+function goForward() {
+  setPosition(Math.min(state.duration, state.position + 30));
+}
+
+function setPosition(value) {
+  state.position = value;
   audioElement.value.currentTime = state.position;
   state.seekingPosition = undefined;
 }
-
-watch(
-  () => state.volume,
-  (volume) => {
-    audioElement.value.volume = volume / 100;
-  }
-);
-watch(
-  () => state.muted,
-  (muted) => {
-    audioElement.value.muted = muted;
-  }
-);
 
 onMounted(() => {
   audioElement.value.readyState > 0
@@ -117,18 +104,35 @@ onMounted(() => {
         @:play="state.playing = true"
         @:timeupdate="state.position = $event.target.currentTime"
       ></audio>
-      <img class="w-52 h52 self-center" :src="cover" alt="" />
+      <img class="w-52 h-52 self-center" :src="cover" alt="" />
       <div class="flex flex-col md:block md:flex-grow md:self-center">
-        <button
-          class="w-12 h-12 self-center flex-none md:mx-auto"
-          @:click="togglePlayPause()"
-          :title="state.playing ? 'Pause' : 'Play'"
-        >
-          <img
-            :src="state.playing ? PauseIcon : PlayIcon"
-            class="hover:drop-shadow-lg w-full h-full"
-          />
-        </button>
+        <div class="my-4 flex justify-center items-center gap-6">
+          <button class="w-12 h-12" @:click="goBack()" title="-10 Sekunden">
+            <img
+              :src="BackIcon"
+              alt=""
+              class="hover:opacity-75 transition-opacity w-full h-full"
+            />
+          </button>
+          <button
+            class="w-14 h-14"
+            @:click="togglePlayPause()"
+            :title="state.playing ? 'Pause' : 'Play'"
+          >
+            <img
+              :src="state.playing ? PauseIcon : PlayIcon"
+              alt=""
+              class="hover:opacity-75 transition-opacity w-full h-full"
+            />
+          </button>
+          <button class="w-12 h-12" @:click="goForward()" title="+ 30 Sekunden">
+            <img
+              :src="ForwardIcon"
+              alt=""
+              class="hover:opacity-75 transition-opacity w-full h-full"
+            />
+          </button>
+        </div>
         <div class="w-100">
           <input
             class="col-start-1 col-span-full"
@@ -136,60 +140,35 @@ onMounted(() => {
             aria-label="Wiedergabeposition"
             :style="{
               '--min': 0,
-              '--max': Math.floor(state.duration),
+              '--max': flooredDuration,
               '--val': currentPosition,
             }"
-            :aria-valuetext="formatSecondsForValuetext(currentPosition)"
-            :max="Math.floor(state.duration)"
+            :aria-valuetext="formatSecondToValuetext(currentPosition)"
+            :max="flooredDuration"
             :value="currentPosition"
             @:input="state.seekingPosition = $event.target.value"
-            @:change="setPosition"
+            @:change="setPosition($event.target.value)"
           />
           <div class="flex flex-row justify-between">
             <div class="tabular-nums text-left">
-              <time :datetime="formatSecondsForTime(currentPosition)">{{
-                formatSeconds(currentPosition)
+              <time :datetime="formatSecondsToDuration(currentPosition)">{{
+                formatSecondsToDisplay(currentPosition)
               }}</time>
             </div>
             <div class="tabular-nums text-right">
-              <time :datetime="formatSecondsForTime(state.duration)">{{
-                formatSeconds(state.duration)
+              <time :datetime="formatSecondsToDuration(state.duration)">{{
+                formatSecondsToDisplay(state.duration)
               }}</time>
             </div>
           </div>
         </div>
-        <div class="flex flex-row gap-2 items-center md:justify-end">
-          <output
-            :for="`volume-${uid}`"
-            class="flex-none text-right tabular-nums w-10"
-            >{{ `${state.volume}%` }}</output
-          >
-          <div class="flex-grow md:flex-grow-0 md:w-1/3 flex items-center">
-            <input
-              :id="`volume-${uid}`"
-              type="range"
-              max="100"
-              aria-label="Lautstärke"
-              :style="{ '--min': 0, '--max': 100, '--val': state.volume }"
-              :value="state.volume"
-              @:input="state.volume = $event.target.value"
-            />
-          </div>
-          <button
-            class="w-8 h-8"
-            :title="state.muted ? 'Stummschaltung aufheben' : 'stumm schalten'"
-            @:click="state.muted = !state.muted"
-          >
-            <img :src="state.muted ? UnmuteIcon : MuteIcon" alt="" />
-          </button>
-        </div>
         <div class="text-center mt-4 max-w-sm mx-auto">
           <a
-            class="flex flex-col items-center justify-center md:flex-row bg-yellow-300 border-solid border-yellow-300 border-4 text-black p-3 font-bold focus:bg-white hover:bg-white"
+            class="flex flex-col items-center justify-center md:flex-row md:gap-2 bg-yellow-300 border-solid border-yellow-300 border-4 text-black p-3 font-bold focus:bg-white hover:bg-white"
             :href="src"
             :download="title"
           >
-            <img :src="DownloadIcon" class="inline-block w-10" />
+            <img :src="DownloadIcon" alt="" class="inline-block w-10" />
             Episode &bdquo;{{ title }}&ldquo; herunterladen</a
           >
         </div>
