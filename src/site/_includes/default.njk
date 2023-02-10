@@ -22,15 +22,14 @@
             {{page.url | webcGetCss | safe}}
         </style>
     </head>
-    <body class="font-sans bg-amber-100">
+    <body class="font-sans bg-amber-50">
         <div class="container mx-auto px-4 min-h-full flex flex-col">
             <header class="flex-none flex flex-col py-4 items-center">
                 <{{ "h1" if page.url == "/" else "div" }}>
-                    <a href="/" >
-                        <img class="w-28" src="/img/logo.svg" alt="WAFL">
+                    <a href="/" class="mb-1 inline-block text-8xl font-extrabold" >
+                        WAFL
                     </a>
                 </{{ "h1" if page.url == "/" else "div" }}>
-                <wafl-explanation></wafl-explanation>
                 <nav>
                     <ul class="list-none p-0 m-0 mt-3 flex justify-center gap-8">
                         {% set navPages = collections.all | eleventyNavigation %}
@@ -38,6 +37,7 @@
                             <li>
                                 <a
                                     class="
+                                    text-xl
                                     bg-yellow-300
                                     border-solid
                                     border-yellow-300
@@ -60,19 +60,19 @@
                     </ul>
                 </nav>
             </header>
-            <main class="flex-grow">
+            <main class="flex-grow flex flex-col">
                 {{ content | safe }}
             </main>
             <footer class="flex-none my-7">
                 <ul class="list-none p-0 flex justify-center gap-8">
                     <li>
                         <a class="block" rel="me noreferrer" href="{{ metadata.social.mastodon }}">
-                            <img class="text-sky-400 w-12" src="/img/icons/mastodon.svg" alt="Mastodon">
+                            <img class="h-12 w-12" src="/assets/icons/mastodon.svg" alt="Mastodon">
                         </a>
                     </li>
                     <li>
                         <a class="block" rel="me noreferrer" href="{{ metadata.social.twitter }}">
-                            <img class="text-sky-400 w-12" src="/img/icons/twitter.svg" alt="Twitter">
+                            <img class="h-12 w-12" src="/assets/icons/twitter.svg" alt="Twitter">
                         </a>
                     </li>
                 </ul>
