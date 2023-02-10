@@ -5,6 +5,7 @@ module.exports = {
     "./src/**/*.md",
     "./src/**/*.js",
     "./src/**/*.webc",
+    "./src/**/*.vue",
   ],
   theme: {
     fontFamily: {

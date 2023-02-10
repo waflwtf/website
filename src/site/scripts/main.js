@@ -1,36 +1,23 @@
-function initExplanation() {
-  const possibleExplanations = [
-    "Wahrlich Alberner Frittierter Lametta",
-    "Wein-Amphoren-Fern-Logistik",
-  ];
+import { createApp } from "vue";
+import PodcastPlayer from "./components/PodcastPlayer.vue";
+/**
+ * Extract data and render podcast player to element.
+ * @param {HTMLElement} element
+ */
+function renderPodcastPlayer(element) {
+  const src = element.dataset["src"];
+  const title = element.dataset["title"];
+  const cover = element.dataset["cover"];
 
-  const getRandomExplanation = () =>
-    possibleExplanations[
-      Math.floor(Math.random() * possibleExplanations.length)
-    ];
-
-  const setExplanation = (el, exp) => {
-    el.textContent = exp;
-    el.style.visibility = "visible";
-  };
-
-  const element = document.getElementById("explanation");
-  if (!element) {
+  if (!src || !title || !cover) {
+    console.error("Podcast player is missing data attributes");
     return;
   }
 
-  if (!window.sessionStorage) {
-    setExplanation(element, getRandomExplanation());
-  }
-
-  const currentExplanationKey = "currentExplanation";
-  let currentExplanation = window.sessionStorage.getItem(currentExplanationKey);
-  if (!currentExplanation) {
-    currentExplanation = getRandomExplanation();
-    window.sessionStorage.setItem(currentExplanationKey, currentExplanation);
-  }
-
-  setExplanation(element, currentExplanation);
+  const app = createApp(PodcastPlayer, { src, title, cover });
+  app.mount(element);
 }
 
-initExplanation();
+document
+  .querySelectorAll(".podcast-player")
+  .forEach((el) => renderPodcastPlayer(el));

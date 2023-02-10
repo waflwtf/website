@@ -1,24 +1,23 @@
 ---
 layout: default.njk
 ---
-<article class="episode">
-    <h1 class="text-4xl">
+<article class="bg-white p-2 border-yellow-300 border-4">
+    <h1 class="font-extrabold text-4xl mb-4">
         {{ title }}
     </h1>
 
-    <figure>
-        <figcaption>Episode &bdquo;{{ title }}&ldquo; anhören:</figcaption>
-        <audio
-        controls
-        src="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
-            <a href="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
-                Episode herunterladen
-        </a>
-        </audio>
-    </figure>
-    <a class="text-lg" href="{{ media.content | absoluteUrl(podcast.storageUrl) }}">
-        Episode herunterladen
-    </a>
+    {%- set audioSrc = media.content | absoluteUrl(podcast.storageUrl) -%}
+    {%- set cover = media.image if media.image else podcast.channelImage -%}
+
+    <div class="max-w-prose mb-4">
+        {% renderTemplate "webc", {
+            title: title,
+            audioSrc: audioSrc,
+            cover: cover
+        } %}
+        <podcast-player :title="title" :src="audioSrc" :cover="cover"></podcast-player>
+        {% endrenderTemplate %}
+    </div>
     <div class="prose">
         {{ content | safe }}
     </div>
