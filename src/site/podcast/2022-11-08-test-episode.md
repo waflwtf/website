@@ -7,6 +7,7 @@ media:
   episode: 1
 
   guid: "e055edbc-da43-4429-9fcf-6703dcec9851"
+  recordingDate: 2022-10-11
 
   # The image file for this episode
   # You can ignore this if you don't want per-episode artwork

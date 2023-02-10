@@ -3,6 +3,8 @@ const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
 const eleventyPluginRss = require("@11ty/eleventy-plugin-rss");
 const escape = require("lodash/escape");
 const contentBox = require("./src/shortcodes/contentBox.js");
+const formatDateDisplay = require("./src/filters/formatDateDisplay.js");
+const formatDateISO = require("./src/filters/formatDateISO.js");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
 const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
@@ -71,6 +73,8 @@ module.exports = function (config) {
   config.addFilter("xmlEscape", (value) => {
     return escape(value);
   });
+  config.addFilter("formatDateDisplay", formatDateDisplay);
+  config.addFilter("formatDateISO", formatDateISO);
 
   config.addFilter("required", (d) => {
     if (d == undefined) {
