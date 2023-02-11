@@ -5,4 +5,5 @@ module.exports = {
   endOfLine: "lf",
   printWidth: 80,
   proseWrap: "always",
+  singleAttributePerLine: true,
 };

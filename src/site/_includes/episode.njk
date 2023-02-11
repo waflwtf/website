@@ -1,13 +1,13 @@
 ---
 layout: default.njk
 ---
-<article class="flex-grow flex flex-col items-center bg-white p-2 border-yellow-300 border-4">
-    <h1 class="font-extrabold text-4xl md:text-5xl mb-2">
+<article class="contents">
+    <h1 class="mb-2 text-4xl font-extrabold text-center md:text-5xl">
         {{ title }}
     </h1>
-    <div class="flex flex-col md:flex-row md:gap-2 text-sm mb-4">
-        <div>
-            <img class="inline-block h-4 w-4" src="/assets/icons/icon-globe.svg" alt="">
+    <div class="flex flex-row flex-wrap justify-center gap-2 mb-4 text-sm">
+        <div class="flex items-center gap-1">
+            <img class="inline-block w-4 h-4" src="/assets/icons/icon-globe.svg" alt="">
             <span class="sr-only">
                 Veröffentlich am
             </span>
@@ -15,8 +15,8 @@ layout: default.njk
                 {{ date | formatDateDisplay }}
             </time>
         </div>
-        <div>
-            <img class="inline-block h-4 w-4" src="/assets/icons/icon-mic.svg" alt="">
+        <div class="flex items-center gap-1">
+            <img class="inline-block w-4 h-4" src="/assets/icons/icon-mic.svg" alt="">
             <span class="sr-only">
                 Aufgenommen am
             </span>
@@ -29,7 +29,7 @@ layout: default.njk
     {%- set audioSrc = media.content | absoluteUrl(podcast.storageUrl) -%}
     {%- set cover = media.image if media.image else podcast.channelImage -%}
 
-    <div class="max-w-prose mb-4">
+    <div class="w-full mb-4">
         {% renderTemplate "webc", {
             title: title,
             audioSrc: audioSrc,

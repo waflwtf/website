@@ -90,11 +90,11 @@ onMounted(() => {
 
 <template>
   <div
-    class="flex flex-col gap-2 bg-white p-2"
+    class="flex flex-col gap-2 p-2 bg-white border-2 border-yellow-400 rounded"
     role="region"
     aria-label="Podcast Player"
   >
-    <div class="flex flex-col md:flex-row gap-2">
+    <div class="flex flex-col gap-2 md:flex-row">
       <audio
         ref="audioElement"
         :src="src"
@@ -104,14 +104,22 @@ onMounted(() => {
         @:play="state.playing = true"
         @:timeupdate="state.position = $event.target.currentTime"
       ></audio>
-      <img class="w-52 h-52 self-center" :src="cover" alt="" />
+      <img
+        class="self-center w-52 h-52"
+        :src="cover"
+        alt=""
+      />
       <div class="flex flex-col md:block md:flex-grow md:self-center">
-        <div class="my-4 flex justify-center items-center gap-6">
-          <button class="w-12 h-12" @:click="goBack()" title="-10 Sekunden">
+        <div class="flex items-center justify-center gap-6 my-4">
+          <button
+            class="w-12 h-12"
+            @:click="goBack()"
+            title="-10 Sekunden"
+          >
             <img
               :src="BackIcon"
               alt=""
-              class="hover:opacity-75 transition-opacity w-full h-full"
+              class="w-full h-full transition-opacity hover:opacity-75"
             />
           </button>
           <button
@@ -122,14 +130,18 @@ onMounted(() => {
             <img
               :src="state.playing ? PauseIcon : PlayIcon"
               alt=""
-              class="hover:opacity-75 transition-opacity w-full h-full"
+              class="w-full h-full transition-opacity hover:opacity-75"
             />
           </button>
-          <button class="w-12 h-12" @:click="goForward()" title="+ 30 Sekunden">
+          <button
+            class="w-12 h-12"
+            @:click="goForward()"
+            title="+ 30 Sekunden"
+          >
             <img
               :src="ForwardIcon"
               alt=""
-              class="hover:opacity-75 transition-opacity w-full h-full"
+              class="w-full h-full transition-opacity hover:opacity-75"
             />
           </button>
         </div>
@@ -150,25 +162,29 @@ onMounted(() => {
             @:change="setPosition($event.target.value)"
           />
           <div class="flex flex-row justify-between">
-            <div class="tabular-nums text-left">
+            <div class="text-left tabular-nums">
               <time :datetime="formatSecondsToDuration(currentPosition)">{{
                 formatSecondsToDisplay(currentPosition)
               }}</time>
             </div>
-            <div class="tabular-nums text-right">
+            <div class="text-right tabular-nums">
               <time :datetime="formatSecondsToDuration(state.duration)">{{
                 formatSecondsToDisplay(state.duration)
               }}</time>
             </div>
           </div>
         </div>
-        <div class="text-center mt-4 max-w-sm mx-auto">
+        <div class="max-w-sm mx-auto mt-4 text-center">
           <a
-            class="flex flex-col items-center justify-center md:flex-row md:gap-2 bg-yellow-300 border-solid border-yellow-300 border-4 text-black p-3 font-bold focus:bg-white hover:bg-white"
+            class="flex flex-col items-center justify-center p-2 font-bold text-black transition-all bg-yellow-300 border-solid rounded md:flex-row md:gap-2 drop-shadow-md hover:drop-shadow-xl focus:drop-shadow-xl"
             :href="src"
             :download="title"
           >
-            <img :src="DownloadIcon" alt="" class="inline-block w-10" />
+            <img
+              :src="DownloadIcon"
+              alt=""
+              class="inline-block w-10"
+            />
             Episode &bdquo;{{ title }}&ldquo; herunterladen</a
           >
         </div>
