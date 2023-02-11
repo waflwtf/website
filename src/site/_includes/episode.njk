@@ -1,12 +1,12 @@
 ---
 layout: default.njk
 ---
-<article class="flex-grow flex flex-col items-center bg-white p-2 border-yellow-300 border-4">
-    <h1 class="font-extrabold text-4xl md:text-5xl mb-2">
+<article>
+    <h1 class="text-center font-extrabold text-4xl md:text-5xl mb-2">
         {{ title }}
     </h1>
-    <div class="flex flex-col md:flex-row md:gap-2 text-sm mb-4">
-        <div>
+    <div class="flex flex-row flex-wrap justify-center gap-2 text-sm mb-4">
+        <div class="flex items-center gap-1">
             <img class="inline-block h-4 w-4" src="/assets/icons/icon-globe.svg" alt="">
             <span class="sr-only">
                 Veröffentlich am
@@ -15,7 +15,7 @@ layout: default.njk
                 {{ date | formatDateDisplay }}
             </time>
         </div>
-        <div>
+        <div class="flex items-center gap-1">
             <img class="inline-block h-4 w-4" src="/assets/icons/icon-mic.svg" alt="">
             <span class="sr-only">
                 Aufgenommen am

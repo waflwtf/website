@@ -23,36 +23,27 @@
         </style>
     </head>
     <body class="font-sans bg-amber-50">
-        <div class="container mx-auto px-4 min-h-full flex flex-col">
-            <header class="flex-none flex flex-col py-4 items-center">
+        <div class="container flex flex-col min-h-full px-4 mx-auto">
+            <header class="flex flex-col items-center flex-none py-4">
                 <{{ "h1" if page.url == "/" else "div" }}>
-                    <a href="/" class="mb-1 inline-block text-8xl font-extrabold" >
+                    <a href="/" class="inline-block mb-1 font-extrabold text-8xl" >
                         WAFL
                     </a>
                 </{{ "h1" if page.url == "/" else "div" }}>
                 <nav>
-                    <ul class="list-none p-0 m-0 mt-3 flex justify-center gap-8">
+                    <ul class="flex justify-center gap-8 p-0 m-0 mt-3 list-none">
                         {% set navPages = collections.all | eleventyNavigation %}
                         {%- for navItem in navPages -%}
                             <li>
                                 <a
                                     class="
-                                    text-xl
-                                    bg-yellow-300
-                                    border-solid
-                                    border-yellow-300
-                                    border-4
-                                    text-black
-                                    p-1
-                                    font-bold
-                                    focus:bg-white
-                                    hover:bg-white
                                     {% if navItem.url == page.url %}
                                         underline
                                         decoration-2
                                     {% else %}
                                         no-underline
-                                    {% endif %}"
+                                    {% endif %}
+                                    inline-block p-2 text-xl font-bold text-black transition-all bg-yellow-300 rounded drop-shadow-md hover:drop-shadow-xl focus:drop-shadow-xl"
                     href="{{ navItem.url }}"
                     >{{ navItem.title }}</a>
                             </li>
@@ -60,19 +51,19 @@
                     </ul>
                 </nav>
             </header>
-            <main class="flex-grow flex flex-col">
+            <main class="flex flex-col items-center flex-grow p-2 bg-white rounded drop-shadow-md">
                 {{ content | safe }}
             </main>
             <footer class="flex-none my-7">
-                <ul class="list-none p-0 flex justify-center gap-8">
+                <ul class="flex justify-center gap-8 p-0 list-none">
                     <li>
                         <a class="block" rel="me noreferrer" href="{{ metadata.social.mastodon }}">
-                            <img class="h-12 w-12" src="/assets/icons/mastodon.svg" alt="Mastodon">
+                            <img class="w-12 h-12" src="/assets/icons/mastodon.svg" alt="Mastodon">
                         </a>
                     </li>
                     <li>
                         <a class="block" rel="me noreferrer" href="{{ metadata.social.twitter }}">
-                            <img class="h-12 w-12" src="/assets/icons/twitter.svg" alt="Twitter">
+                            <img class="w-12 h-12" src="/assets/icons/twitter.svg" alt="Twitter">
                         </a>
                     </li>
                 </ul>
