@@ -1,6 +1,6 @@
 <div class="min-h-[13rem] flex flex-col items-center justify-center">
   <div
-    class="podcast-player"
+    class="w-full podcast-player"
     :data-src="src"
     :data-title="title"
     :data-cover="cover"

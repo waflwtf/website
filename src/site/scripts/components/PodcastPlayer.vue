@@ -90,7 +90,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="flex flex-col gap-2 p-2 bg-white border-4 border-yellow-400 rounded"
+    class="flex flex-col gap-2 p-2 bg-white border-2 border-yellow-400 rounded"
     role="region"
     aria-label="Podcast Player"
   >
