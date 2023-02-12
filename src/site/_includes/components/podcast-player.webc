@@ -12,7 +12,7 @@
     return Image(cover, {
       widths: [210],
       formats: ["webp", "jpeg"],
-      outputDir: "./_site/img/",
+      outputDir: "./_site/public/img/",
       urlPath: "/img",
     }).then((metadata) => {
       const imageTag = Image.generateHTML(metadata, {

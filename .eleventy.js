@@ -44,14 +44,18 @@ module.exports = function (config) {
           output: {
             assetFileNames(chunkInfo) {
               let ext = path.extname(chunkInfo.name);
-
+              let folder = ext.slice(1);
               if (/png|svg|jpg|jpeg|webp|ico/i.test(ext)) {
                 return `img/[name][extname]`;
               } else if (/mp4|webm/i.test(ext)) {
-                ext = "videos";
+                folder = "videos";
+              } else if (/woff2?/i.test(ext)) {
+                folder = "fonts";
+              } else if (/css/i.test(ext)) {
+                folder = "styles";
               }
 
-              return `assets/${ext}/[name].[hash][extname]`;
+              return `assets/${folder}/[name].[hash][extname]`;
             },
 
             chunkFileNames: "assets/scripts/[name].[hash].js",
