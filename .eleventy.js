@@ -3,6 +3,7 @@ const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
 const eleventyPluginRss = require("@11ty/eleventy-plugin-rss");
 const escape = require("lodash/escape");
 const contentBox = require("./src/shortcodes/contentBox.js");
+const imageShortcode = require("./src/shortcodes/image.js");
 const formatDateDisplay = require("./src/filters/formatDateDisplay.js");
 const formatDateISO = require("./src/filters/formatDateISO.js");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
@@ -72,6 +73,7 @@ module.exports = function (config) {
   config.addPassthroughCopy("./src/site/styles");
 
   config.addPairedShortcode("contentBox", contentBox);
+  config.addAsyncShortcode("image", imageShortcode);
 
   // Escape characters for XML feed
   config.addFilter("xmlEscape", (value) => {
