@@ -105,7 +105,7 @@ onMounted(() => {
         @:timeupdate="state.position = $event.target.currentTime"
       ></audio>
       <div
-        class="self-center drop-shadow-md"
+        class="self-center w-52 h-52 drop-shadow-md"
         v-html="cover"
       ></div>
       <div class="flex flex-col md:block md:flex-grow md:self-center">

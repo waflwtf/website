@@ -10,13 +10,14 @@
     const title = this.title;
 
     return Image(cover, {
-      widths: [210],
+      widths: [210, 420],
       formats: ["webp", "jpeg"],
       outputDir: "./_site/public/img/",
       urlPath: "/img",
     }).then((metadata) => {
       const imageTag = Image.generateHTML(metadata, {
         alt: "",
+        sizes: "13rem",
         loading: "lazy",
         decoding: "async",
       });
