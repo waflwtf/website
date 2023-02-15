@@ -5,9 +5,10 @@ const Image = require("@11ty/eleventy-img");
  * @param {string} src
  * @param {number} width
  * @param {Image.ImageFormat} format
+ * @param {Image.ImageOptions} additionalOptions
  * @returns Relative url to the image.
  */
-module.exports = async function imageResizeFilter(src, width, format) {
+module.exports = async function imageResizeFilter(src, width, format, additionalOptions = {}) {
   if (!width || width <= 0) {
     throw new Error("image width has to be given and greater than 0");
   }
@@ -16,6 +17,7 @@ module.exports = async function imageResizeFilter(src, width, format) {
   }
 
   const metadata = await Image(src, {
+    ...additionalOptions,
     widths: [width],
     formats: [format],
     outputDir: "./_site/public/img/",
