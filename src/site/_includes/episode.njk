@@ -27,7 +27,7 @@ layout: default.njk
     </div>
 
     {%- set audioSrc = media.content | absoluteUrl(podcast.storageUrl) -%}
-    {%- set cover = media.image if media.image else podcast.channelImage -%}
+    {%- set cover = podcast.channelImage -%}
 
     <div class="w-full mb-4">
         {% renderTemplate "webc", {

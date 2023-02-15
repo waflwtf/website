@@ -6,6 +6,7 @@ const contentBox = require("./src/shortcodes/contentBox.js");
 const imageShortcode = require("./src/shortcodes/image.js");
 const formatDateDisplay = require("./src/filters/formatDateDisplay.js");
 const formatDateISO = require("./src/filters/formatDateISO.js");
+const imageResizeFilter = require("./src/filters/imageResize.js");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
 const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
@@ -81,7 +82,7 @@ module.exports = function (config) {
   });
   config.addFilter("formatDateDisplay", formatDateDisplay);
   config.addFilter("formatDateISO", formatDateISO);
-
+  config.addAsyncFilter("resizeImage", imageResizeFilter);
   config.addFilter("required", (d) => {
     if (d == undefined) {
       throw new Error("Data is undefined but is marked as required.");
