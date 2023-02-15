@@ -4,28 +4,30 @@ eleventyExcludeFromCollections: true
 sitemap:
   exclude: yes
 ---
+{%- set cover = podcast.channelImage | required | resizeImage(3000, 'png') | absoluteUrl(metadata.url) -%}
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <atom:link href="{{ permalink | absoluteUrl(metadata.url) }}" rel="self" type="application/rss+xml" />
+    <atom:link href="{{ permalink | absoluteUrl(metadata.url) }}" rel="self" type="application/rss+xml"/>
     <title>{{ podcast.title | xmlEscape }}</title>
     <link>{{ metadata.url }}</link>
     <description>{{ podcast.description | xmlEscape }}</description>
     <language>de</language>
     <lastBuildDate>{{ collections.podcast | getNewestCollectionItemDate | dateToRfc822 }}</lastBuildDate>
     <generator>Eleventy</generator>
-    <itunes:author>{{ podcast.author }} </itunes:author>
+    <itunes:author>{{ podcast.author }}
+    </itunes:author>
     <itunes:explicit>no</itunes:explicit>
     <itunes:type>episodic</itunes:type>
-    <itunes:image href="{{ podcast.channelImage | absoluteUrl(metadata.url) }}" />
+    <itunes:image href="{{ cover }}"/>
     <itunes:owner>
       <itunes:name>{{ podcast.owner.name }}</itunes:name>
       <itunes:email>{{ podcast.owner.email }}</itunes:email>
     </itunes:owner>
-    <itunes:category text="{{ podcast.category }}" />
+    <itunes:category text="{{ podcast.category }}"/>
 
     {%- for podcastEpisode in collections.podcast | reverse -%}
       <item>
@@ -35,24 +37,21 @@ sitemap:
 
         <title>{{ podcastEpisode.data.title | required | ensureUniqueInCollection("data.title", collections.podcast) | xmlEscape }}</title>
 
-        <description><![CDATA[{{ podcastEpisode.data.media.description | required | safe }}]]></description>
-
+        <description>
+          <![CDATA[{{ podcastEpisode.data.media.description | required | safe }}]]>
+        </description>
 
         <enclosure
           url="{{ podcastEpisode.data.media.content | required | ensureUniqueInCollection("data.media.content", collections.podcast) | absoluteUrl(podcast.storageUrl) }}"
           length="{{ podcastEpisode.data.media.fileSize | required }}"
           type="audio/mpeg"
-        />
+/>
 
         {# iTunes specific tags  #}
 
         <itunes:episodeType>full</itunes:episodeType>
 
-        {% if podcastEpisode.data.media.image %}
-            <itunes:image href="{{ podcastEpisode.data.media.image | absoluteUrl(metadata.url) }}" />
-        {% else %}
-            <itunes:image href="{{ podcast.channelImage | required | absoluteUrl(metadata.url) }}" />
-        {% endif %}
+        <itunes:image href="{{ cover }}"/>
 
         <itunes:episode>{{ podcastEpisode.data.media.episode | ensureUniqueInCollection("data.media.episode", collections.podcast) | required }}</itunes:episode>
 

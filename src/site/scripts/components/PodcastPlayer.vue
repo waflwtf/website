@@ -104,11 +104,10 @@ onMounted(() => {
         @:play="state.playing = true"
         @:timeupdate="state.position = $event.target.currentTime"
       ></audio>
-      <img
-        class="self-center w-52 h-52"
-        :src="cover"
-        alt=""
-      />
+      <div
+        class="self-center w-52 h-52 drop-shadow-md"
+        v-html="cover"
+      ></div>
       <div class="flex flex-col md:block md:flex-grow md:self-center">
         <div class="flex items-center justify-center gap-6 my-4">
           <button

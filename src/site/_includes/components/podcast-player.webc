@@ -1,23 +1,49 @@
-<div class="min-h-[13rem] flex flex-col items-center justify-center">
-  <div
-    class="w-full podcast-player"
-    :data-src="src"
-    :data-title="title"
-    :data-cover="cover"
-  ></div>
+<script
+  webc:type="render"
+  webc:is="template"
+>
+  function() {
+    const Image = require("@11ty/eleventy-img");
 
-  <div webc:is="noscript">
-    <div class="flex flex-col items-center justify-center gap-2">
-      <audio controls :src="src"></audio>
-      <a
-        class="flex flex-col items-center justify-center p-2 font-bold text-black transition-all bg-yellow-300 border-solid rounded md:flex-row md:gap-2 drop-shadow-md hover:drop-shadow-xl focus:drop-shadow-xl"
-        :href="src"
-        :download="title"
-      >
-        <img src="/assets/icons/icon-download.svg" alt="" class="inline-block w-10" />
-        Episode &bdquo;<template @text="title" webc:nokeep></template>&ldquo;
-        herunterladen</a
-      >
-    </div>
-  </div>
-</div>
+    const cover = this.cover;
+    const src = this.src;
+    const title = this.title;
+
+    return Image(cover, {
+      widths: [210, 420],
+      formats: ["webp", "jpeg"],
+      outputDir: "./_site/public/img/",
+      urlPath: "/img",
+    }).then((metadata) => {
+      const imageTag = Image.generateHTML(metadata, {
+        alt: "",
+        sizes: "13rem",
+        loading: "lazy",
+        decoding: "async",
+      });
+
+      return `<div class="min-h-[230px] flex flex-col items-center justify-center">
+      <div
+        class="w-full podcast-player"
+        data-src="${src}"
+        data-title="${title}"
+        data-cover='${imageTag}'
+      ></div>
+
+
+      <noscript>
+        <div class="flex flex-col items-center justify-center gap-2">
+          <audio controls src="${src}"></audio>
+          <a
+            class="flex flex-col items-center justify-center p-2 font-bold text-black transition-all bg-yellow-300 border-solid rounded md:flex-row md:gap-2 drop-shadow-md hover:drop-shadow-xl focus:drop-shadow-xl"
+            href="${src}"
+            download="${title}"
+          >
+            <img src="/assets/icons/icon-download.svg" alt="" class="inline-block w-10" />
+            Episode &bdquo;${title}&ldquo; herunterladen</a>
+        </div>
+      </noscript>
+    </div>`;
+    });
+  }
+</script>

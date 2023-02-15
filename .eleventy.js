@@ -3,8 +3,10 @@ const eleventyNavigationPlugin = require("@11ty/eleventy-navigation");
 const eleventyPluginRss = require("@11ty/eleventy-plugin-rss");
 const escape = require("lodash/escape");
 const contentBox = require("./src/shortcodes/contentBox.js");
+const imageShortcode = require("./src/shortcodes/image.js");
 const formatDateDisplay = require("./src/filters/formatDateDisplay.js");
 const formatDateISO = require("./src/filters/formatDateISO.js");
+const imageResizeFilter = require("./src/filters/imageResize.js");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
 const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
@@ -44,14 +46,18 @@ module.exports = function (config) {
           output: {
             assetFileNames(chunkInfo) {
               let ext = path.extname(chunkInfo.name);
-
+              let folder = ext.slice(1);
               if (/png|svg|jpg|jpeg|webp|ico/i.test(ext)) {
                 return `img/[name][extname]`;
               } else if (/mp4|webm/i.test(ext)) {
-                ext = "videos";
+                folder = "videos";
+              } else if (/woff2?/i.test(ext)) {
+                folder = "fonts";
+              } else if (/css/i.test(ext)) {
+                folder = "styles";
               }
 
-              return `assets/${ext}/[name].[hash][extname]`;
+              return `assets/${folder}/[name].[hash][extname]`;
             },
 
             chunkFileNames: "assets/scripts/[name].[hash].js",
@@ -68,6 +74,7 @@ module.exports = function (config) {
   config.addPassthroughCopy("./src/site/styles");
 
   config.addPairedShortcode("contentBox", contentBox);
+  config.addAsyncShortcode("image", imageShortcode);
 
   // Escape characters for XML feed
   config.addFilter("xmlEscape", (value) => {
@@ -75,7 +82,7 @@ module.exports = function (config) {
   });
   config.addFilter("formatDateDisplay", formatDateDisplay);
   config.addFilter("formatDateISO", formatDateISO);
-
+  config.addAsyncFilter("resizeImage", imageResizeFilter);
   config.addFilter("required", (d) => {
     if (d == undefined) {
       throw new Error("Data is undefined but is marked as required.");
