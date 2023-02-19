@@ -81,6 +81,14 @@ function setPosition(value) {
   state.seekingPosition = undefined;
 }
 
+function onTimeupdate(e) {
+  if (state.seekingPosition != undefined) {
+    return;
+  }
+
+  state.position = e.target.currentTime;
+}
+
 onMounted(() => {
   audioElement.value.readyState > 0
     ? (state.duration = audioElement.value.duration)
@@ -100,9 +108,9 @@ onMounted(() => {
         :src="src"
         preload="metadata"
         @loadedmetadata="state.duration = $event.target.duration"
-        @:pause="state.playing = false"
-        @:play="state.playing = true"
-        @:timeupdate="state.position = $event.target.currentTime"
+        @pause="state.playing = false"
+        @play="state.playing = true"
+        @timeupdate="onTimeupdate"
       ></audio>
       <div
         class="self-center w-52 h-52 drop-shadow-md"
@@ -112,7 +120,7 @@ onMounted(() => {
         <div class="flex items-center justify-center gap-6 my-4">
           <button
             class="w-12 h-12"
-            @:click="goBack()"
+            @click="goBack()"
             title="-10 Sekunden"
           >
             <img
@@ -123,7 +131,7 @@ onMounted(() => {
           </button>
           <button
             class="w-14 h-14"
-            @:click="togglePlayPause()"
+            @click="togglePlayPause()"
             :title="state.playing ? 'Pause' : 'Play'"
           >
             <img
@@ -134,7 +142,7 @@ onMounted(() => {
           </button>
           <button
             class="w-12 h-12"
-            @:click="goForward()"
+            @click="goForward()"
             title="+ 30 Sekunden"
           >
             <img
@@ -157,8 +165,8 @@ onMounted(() => {
             :aria-valuetext="formatSecondToValuetext(currentPosition)"
             :max="flooredDuration"
             :value="currentPosition"
-            @:input="state.seekingPosition = $event.target.value"
-            @:change="setPosition($event.target.value)"
+            @input="state.seekingPosition = $event.target.value"
+            @change="setPosition($event.target.value)"
           />
           <div class="flex flex-row justify-between">
             <div class="text-left tabular-nums">
