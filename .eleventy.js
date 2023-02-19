@@ -42,6 +42,7 @@ module.exports = function (config) {
       build: {
         mode: "production",
         assetsInlineLimit: 0,
+        sourcemap: true,
         rollupOptions: {
           output: {
             assetFileNames(chunkInfo) {
